@@ -27,7 +27,7 @@ using namespace std;
 int main() {
 
 	// pause Program A
-	sleep(3); 	// BAD programming - unreliable and potential bug
+	//sleep(3); 	// BAD programming - unreliable and potential bug
 			// do NOT use
 
 	int qid = msgget(ftok(".",'u'), 0);
@@ -40,30 +40,19 @@ int main() {
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 
-	// sending garbage
-	msg.mtype = 111;
-	strcpy(msg.greeting, "Fake message");
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-
-	strcpy(msg.greeting, "Another fake");
-	msg.mtype = 113;
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-
-	// prepare my message to send
+	
 	strcpy(msg.greeting, "Hello there");	
 	cout << getpid() << ": sends greeting" << endl;
-	msg.mtype = 117; 	// set message type mtype = 117
+	msg.mtype = 251; 	// set message type mtype = 117
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 
-	msgrcv(qid, (struct msgbuf *)&msg, size, 314, 0); // reading
+	msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0); // reading
 	cout << getpid() << ": gets reply" << endl;
 	cout << "reply: " << msg.greeting << endl;
 	cout << getpid() << ": now exits" << endl;
 
-	msg.mtype = 117;
-	msgsnd (qid, (struct msgbuf *)&msg, size, 0);
-
-	exit(0);
+	
+	
 }
 
 

@@ -38,24 +38,32 @@ int main() {
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 
-	msgrcv(qid, (struct msgbuf *)&msg, size, 117, 0); // read mesg
+	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // read mesg
 						// don't read "fake" mesg
 	cout << getpid() << ": gets message" << endl;
 	cout << "message: " << msg.greeting << endl;
 	
 	strcat(msg.greeting, " and Adios.");
 	cout << getpid() << ": sends reply" << endl;
-	msg.mtype = 314; // only reading mesg with type mtype = 314
+	msg.mtype = 997; // only reading mesg with type mtype = 314
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-	cout << getpid() << ": now exits" << endl;
+	
 
-	msgrcv (qid, (struct msgbuf *)&msg, size, -112, 0);
-	msgrcv (qid, (struct msgbuf *)&msg, size, 0, 0);
-	msgrcv (qid, (struct msgbuf *)&msg, size, 117, 0);
+	
 
-	// now safe to delete message queue
-	msgctl (qid, IPC_RMID, NULL);
 
+	msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0); // read mesg
+						// don't read "fake" mesg
+	cout << getpid() << ": gets message" << endl;
+	cout << "message: " << msg.greeting << endl;
+	
+	strcat(msg.greeting, " and Adios.");
+	cout << getpid() << ": sends reply" << endl;
+	msg.mtype = 251; // only reading mesg with type mtype = 314
+	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
+	
+
+	
 	exit(0);
 }
 
