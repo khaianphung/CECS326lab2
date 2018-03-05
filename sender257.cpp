@@ -1,17 +1,5 @@
 /* 
-
-This is a simple illustration of the use of:
-	ftok, msgget, msgsnd, msgrcv
-
-Program A will use a message queue created by Program B. 
-Then, they will pass messages back and forth.
-
-Program A sends the first message and reads the reply. Program A
-also sends a "fake" message to the msgQ that will never be read
-by anyone.
-
-Both child processes use message type mtype = 113 and 114.
-
+sender 257
 */
 
 #include <sys/types.h>
@@ -26,10 +14,8 @@ using namespace std;
 
 int main() {
 
-	// pause Program A
-	//sleep(3); 	// BAD programming - unreliable and potential bug
-			// do NOT use
 
+	// search for queue
 	int qid = msgget(ftok(".",'u'), 0);
 
 	// declare my message buffer
@@ -43,7 +29,7 @@ int main() {
 	
 	strcpy(msg.greeting, "Hello there");	
 	cout << getpid() << ": sends greeting" << endl;
-	msg.mtype = 257; 	// set message type mtype = 117
+	msg.mtype = 257; 	// set message type mtype = 257
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 
 	msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0); // reading
