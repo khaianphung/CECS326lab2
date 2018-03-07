@@ -22,6 +22,7 @@ Both child processes use message type mtype = 113 and 114.
 #include <unistd.h>
 #include <sys/wait.h>
 #include <cstdlib>
+#include <math.h>
 using namespace std;
 
 int main() {
@@ -39,23 +40,20 @@ int main() {
 	};
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
-
+	
+	
 	int counter = 0;
 
 	while(counter < 5000){
 
-	strcpy(msg.greeting, "Hello there");	
-	cout << getpid() << ": sends greeting" << endl;
-
+	
+	r = rand() % ((int) pow(2,32) - 1);
 	msg.mtype = 257; 	
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-
+	cout<<"257 sent to Receiver 1 Number :"<<r<<endl;
 	msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0); // reading
 
-	cout << getpid() << ": gets reply" << endl;
-	cout << "reply: " << msg.greeting << endl;
-	cout << getpid() << ": now exits" << endl;
-
+	
 	cout<<"Counter: "<<counter<<endl;
 	counter++;
 	}

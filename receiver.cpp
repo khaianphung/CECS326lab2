@@ -38,20 +38,22 @@ int main() {
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 
+bool play = true;
+while (play){
 	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // read mesg
 						// don't read "fake" mesg
-	cout << getpid() << ": gets message" << endl;
+	//cout << getpid() << ": gets message" << endl;
 	cout << "message: " << msg.greeting << endl;
 	
-	strcat(msg.greeting, " and Adios.");
-	cout << getpid() << ": sends reply" << endl;
+	//strcat(msg.greeting, " and Adios.");
+	//cout << getpid() << ": sends reply" << endl;
 	msg.mtype = 997; // only reading mesg with type mtype = 314
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 	
 
 	
 
-
+/*
 	msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0); // read mesg
 						// don't read "fake" mesg
 	cout << getpid() << ": gets message" << endl;
@@ -61,7 +63,8 @@ int main() {
 	cout << getpid() << ": sends reply" << endl;
 	msg.mtype = 251; // only reading mesg with type mtype = 314
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-	
+*/
+	}
 
 	
 	exit(0);
