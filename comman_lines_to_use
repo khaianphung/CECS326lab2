@@ -1,0 +1,19 @@
+receiver 1
+  g++ receiver1.cpp -o receiver1.out
+  ./receiver1.out
+  
+receiver 2
+  g++ receiver2.cpp -o receiver2.out
+  ./receiver2.out
+  
+sender 997
+  g++ sender997.cpp -o sender997.out
+  ./sender997.out
+  
+sender 257
+  g++ sender257.cpp -o sender257.out
+  ./sender257.out
+  
+sender 251
+  g++ sender251.cpp -o sender251.out
+  ./sender251.out
