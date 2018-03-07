@@ -40,19 +40,25 @@ int main() {
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 
-	
+	int counter = 0;
+
+	while(counter < 5000){
+
 	strcpy(msg.greeting, "Hello there");	
 	cout << getpid() << ": sends greeting" << endl;
-	msg.mtype = 257; 	// set message type mtype = 117
+
+	msg.mtype = 257; 	
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 
 	msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0); // reading
+
 	cout << getpid() << ": gets reply" << endl;
 	cout << "reply: " << msg.greeting << endl;
 	cout << getpid() << ": now exits" << endl;
 
-	
-
+	cout<<"Counter: "<<counter<<endl;
+	counter++;
+	}
 	exit(0);
 }
 
