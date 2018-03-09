@@ -23,6 +23,7 @@ Both child processes use message type mtype = 113 and 114.
 #include <sys/wait.h>
 #include <cstdlib>
 #include <math.h>
+#include <string>
 using namespace std;
 
 int main() {
@@ -44,20 +45,27 @@ int main() {
 	int r = 200;
 	while(r>100){
 	r = rand() % ((int) pow(2,32) - 1);
+	string c = to_string(r);
 	//For Receiver 1
 	msg.mtype = 997; 	
+	strcpy(msg.greeting,c.c_str());
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-	cout<<"997 sent to Receiver 1 Number :"<<r<<endl;
-	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
 	
+	
+	
+	
+	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
+	cout<<msg.greeting<<endl;
 
-
+/*
 	//For Receiver 2
 	msg.mtype = 997; 	// set message type mtype = 117
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-	cout<<"997 sent to Receiver 2 Number :"<<r<<endl;
+	//cout<<"997 sent to Receiver 2 Number :"<<r<<endl;
 	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
+*/
 	}
+
 	cout<<"997 stops"<<endl;
 	
 

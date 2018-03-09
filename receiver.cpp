@@ -41,11 +41,14 @@ int main() {
 bool play = true;
 while (play){
 	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // read mesg
+	cout<<msg.greeting<<endl;
 						// don't read "fake" mesg
 	//cout << getpid() << ": gets message" << endl;
-	cout << "message: " << msg.greeting << endl;
+	//cout << "message: " << msg.greeting << endl;
 	
-	//strcat(msg.greeting, " and Adios.");
+
+
+	strcpy(msg.greeting, "Ack from Receiver 1");
 	//cout << getpid() << ": sends reply" << endl;
 	msg.mtype = 997; // only reading mesg with type mtype = 314
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
