@@ -1,16 +1,6 @@
 /* 
 
-This is a simple illustration of the use of:
-	ftok, msgget, msgsnd, msgrcv
-
-Program B creates a message queue to be shared with Program A.
-Then, they will pass messages back and forth.
-
-Program A sends the first message and reads the reply. Program A
-also sends a "fake" message to the msgQ that will never be read
-by Program B.
-
-Both child processes use message type mtype = 113 and 114.
+This is the second receiver
 
 */
 
@@ -24,23 +14,26 @@ Both child processes use message type mtype = 113 and 114.
 #include <cstdlib>
 using namespace std;
 
-int main() {
+// declare my message buffer
+struct buf 
+{
+	long mtype; // required
+	char greeting[50]; // mesg content
+};
 
-	// create my msgQ with key value from ftok()
-	int qid = msgget(ftok(".",'u'), IPC_EXCL|IPC_CREAT|0600);
+int main() 
+{
+	// find existing queue
+	int qid = msgget(ftok(".",'u'), 0);
 
-	// declare my message buffer
-	struct buf {
-		long mtype; // required
-		char greeting[50]; // mesg content
-	};
 
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
 	
 	int counter = 0;
-	while(counter <5000){
+	while(counter <5000)
+	{
 /*
 	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // read mesg
 
@@ -55,25 +48,25 @@ int main() {
 	
 */
 	
-
-
-	msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0); // read mesg
+		msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0); // read mesg
 	
 						
-	cout << getpid() << ": gets message" << endl;
-	cout << "message: " << msg.greeting << endl;
+		cout << getpid() << ": gets message" << endl;
+		cout << "message: " << msg.greeting << endl;
 	
-	strcat(msg.greeting, " and Adios.");
+		strcat(msg.greeting, " and Adios.");
 
-	cout << getpid() << ": sends reply" << endl;
+		cout << getpid() << ": sends reply" << endl;
 
-	cout<<"Counter: "<<counter<<endl;
+		cout<<"Counter: "<<counter<<endl;
 
-	msg.mtype = 257; 
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
+		msg.mtype = 257; 
+		msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 	
-	counter++;
+		counter++;
 	}
+
+	cout << "Receiver2 terminated" << endl;
 	exit(0);
 }
 
