@@ -1,0 +1,41 @@
+What each program should do
+
+receiver 1
+  receives message and display the VALUE and SENDER'S IDENTITY
+    receives only from 251 and 997
+  sends acknowledgement to 997 
+  TERMINATES only after 251 and 997 terminates
+  
+receiver 2
+  receives message and display the VALUE and SENDER'S IDENTITY
+      receives only from 257 and 997
+  sends acknowledgement to 997 
+  TERMINATES after receiving 5000 messages
+  
+sender 997
+  sends random number (32-bit value) to both receivers
+  receives acknowledgement from receivers
+  TERMINATES when it gets/observes a random number smaller than 100
+  
+sender 257
+  sends random number (32-bit value) to receiver 2
+  TERMINATES when its receiver stops receiving event notification (i think this means when receiver 2 terminates)
+
+sender 251
+  sends random number (32-bit value) to receiver 1
+  
+  TERMINATES on a 'kill' command from a separate terminal
+     Your professor will supply a patch code to be integrated with this 251 sender. The kill signal (10) that is 
+     entered will trigger the patch code to execute, which sends one (last) message to its intended recipient 
+     before before the sender terminates. See my web page for addition information
+     
+      The sender 251 will send this last message from the patch code, when it gets the kill signal.
+      The message that is sent should be the "exit" message to its receiver
+      that is, when the receiver gets this message, the receiver knows that this sender 251 will have terminated. 
+      This "exit" message can be whatever message & whatever mtype that you specify for your software system. 
+	You decide what this message contains; it's under your full control. 
+
+ 
+To use the Linux patch code: Download get_info.h & binary patchxx.o (xx denotes the version of your Linux kernel - 64 for most of you) 	files into the same directory. The sender 251 source code needs to include get_info.h file and calls the function get_info exactly once (not in a loop), anywhere after the msgget function in sender 251 code. The parameters to this function are quite obvious. Be sure to specify the mtype value correctly. Note that your message object should be typecasted to Linux msgbuf pointer data type.
+
+To compile your code: The compilation would use the command: 'g++ yoursender251.cpp patchxx.o'. The 2 files will compile, link & "fuse" to produce a single executable. Then, execute your program as usual. 
