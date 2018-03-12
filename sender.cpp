@@ -53,13 +53,7 @@ int main()
 		msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
 		cout<<msg.greeting<<endl;
 
-/*
-	//For Receiver 2
-	msg.mtype = 997; 	// set message type mtype = 117
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-	//cout<<"997 sent to Receiver 2 Number :"<<r<<endl;
-	msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
-*/
+		//still need to send to receiver 2
 	}
 
 	cout<<"Sender 997 terminated"<<endl;

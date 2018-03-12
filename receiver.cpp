@@ -50,7 +50,7 @@ int main()
 		//getting a 251 message
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) >= 0)
 		{
-			cout << "message: " << msg.greeting << endl;
+			cout << "Sender 251: " << msg.greeting << endl;
 		}
 		
 		//if both sender 997 and 251 are terminated

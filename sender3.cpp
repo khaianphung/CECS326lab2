@@ -31,12 +31,10 @@ int main()
 	
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
-	
-	
-	int counter = 0;
 
-	// ends loop after receiving 5000 messages
-	while(counter < 5000)
+
+	bool play = true;
+	while (play)
 	{
 
 		//randomly creating 32 bit values numbers
@@ -44,8 +42,12 @@ int main()
 		msg.mtype = 257; 	
 		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 		cout<<"257 sent to Receiver 1 Number :"<<r<<endl;
-		msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0); // reading
 
+		//this is probably an error
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, IPC_NOWAIT) < 0)
+		{
+			exit(0);
+		}
 	
 		cout<<"Counter: "<<counter<<endl;
 		counter++;
