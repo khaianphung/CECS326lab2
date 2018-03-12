@@ -35,37 +35,30 @@ int main()
 	bool play = true;
 	while (play)
 	{
+		//getting a 997 message
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) >= 0 )
+		{
+			cout << "Sender 997: " << msg.greeting << endl;
 
-		//receive msg from 997
-		msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); 
+			//sending ack message
+			strcpy(msg.greeting, "Ack from Receiver 1");
+			msg.mtype = 997; 
+			msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 
-		// read mesg
-		cout<< "Sender 997: " << msg.greeting << endl;
+		}
 
-						// don't read "fake" mesg
-		//cout << getpid() << ": gets message" << endl;
-		//cout << "message: " << msg.greeting << endl;
-	
-
-		//creating ack msg for 997
-		strcpy(msg.greeting, "Ack from Receiver 1");
-		msg.mtype = 997; 
-		msgsnd(qid, (struct msgbuf *)&msg, size, 0); //sending ack message
-	
-
-	
-
-/*
-	msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0); // read mesg
-						// don't read "fake" mesg
-	cout << getpid() << ": gets message" << endl;
-	cout << "message: " << msg.greeting << endl;
-	
-	strcat(msg.greeting, " and Adios.");
-	cout << getpid() << ": sends reply" << endl;
-	msg.mtype = 251; // only reading mesg with type mtype = 314
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-*/
+		//getting a 251 message
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) >= 0)
+		{
+			cout << "message: " << msg.greeting << endl;
+		}
+		
+		//if both sender 997 and 251 are terminated
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, IPC_NOWAIT) < 0 && 
+		    msgrcv(qid, (struct msgbuf *)&msg, size, 251, IPC_NOWAIT) < 0) 
+		{
+			exit(0);
+		}
 	}
 
 	cout<<"Receiver1 terminated"<<endl;
