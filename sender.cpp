@@ -34,7 +34,7 @@ int main()
 	int size = sizeof(msg)-sizeof(long);
 	
 	int r = 200;
-
+	
 	// get out of loop when it randomizes a number less than 100
 	while(r>100)
 	{
@@ -44,15 +44,17 @@ int main()
 		string c = to_string(r);
 
 
-		//For Receiver 1
+		//Sending to receiver 1 and 2
 		msg.mtype = 997; 	
 		strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
 		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-	
+		
 	
 		msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
 		cout<<msg.greeting<<endl;
 
+
+		
 	}
 
 	cout<<"Sender 997 terminated"<<endl;

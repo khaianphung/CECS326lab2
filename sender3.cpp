@@ -39,12 +39,14 @@ int main()
 
 		//randomly creating 32 bit values numbers
 		int r = rand() % ((int) pow(2,32) - 1);
+		string c = to_string(r);
 		msg.mtype = 257; 	
 		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+		strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
 		cout<<"257 sent to Receiver 1 Number :"<<r<<endl;
 
 		//this is probably an error
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, IPC_NOWAIT) < 0)
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, 113, IPC_NOWAIT) >= 0)
 		{
 			exit(0);
 		}

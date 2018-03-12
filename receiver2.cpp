@@ -40,27 +40,27 @@ int main()
 			cout << "Sender 997: " << msg.greeting << endl;
 
 			//sending ack message
-			strcpy(msg.greeting, "Ack from Receiver 1");
+			strcpy(msg.greeting, "Ack from Receiver 2");
 			msg.mtype = 997; 
 			msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-			counter++;
+			
 		}
 
 		//getting a 257 message
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0) >= 0)
 		{
 			cout << "Sender 257: " << msg.greeting << endl;
-			counter++;
-		}	
-
-		cout<<"Counter: "<<counter<<endl;
+		}
 	
+		counter++;
+		cout<<"Counter: "<<counter<<endl;
+		
 	}
 
 	//probably wrong
 	//sending exit event to sender 257
-	msg.mtype = 257; 
-	strcpy(msg.greeting, "Receiver 1 has terminated");
+	msg.mtype = 113; 
+	strcpy(msg.greeting, "Receiver 2 has terminated");
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 	
 	cout << "Receiver2 terminated" << endl;

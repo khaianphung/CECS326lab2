@@ -36,7 +36,7 @@ int main()
 	while (play)
 	{
 		//getting a 997 message
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) >= 0 )
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) >= 0)
 		{
 			cout << "Sender 997: " << msg.greeting << endl;
 
@@ -48,7 +48,7 @@ int main()
 		}
 
 		//getting a 251 message
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) >= 0)
+		if(msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) >= 0)
 		{
 			cout << "Sender 251: " << msg.greeting << endl;
 		}

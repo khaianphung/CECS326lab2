@@ -46,10 +46,11 @@ int main()
 	{
 		//randomly creating 32 bit values numbers
 		int r = rand() % ((int) pow(2,32) - 1);
+		string c = to_string(r);
 		msg.mtype = 251; 	
+		strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
 		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-		cout<<"251 sent to Receiver 1 Number :"<<r<<endl;
-		msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0); // reading
+		cout<<r<<endl;
 	}
 	
 
