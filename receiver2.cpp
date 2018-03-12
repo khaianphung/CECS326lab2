@@ -55,7 +55,6 @@ int main()
 
 		cout<<"Counter: "<<counter<<endl;
 	
-		
 	}
 
 	//probably wrong

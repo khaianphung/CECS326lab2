@@ -53,7 +53,6 @@ int main()
 		msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
 		cout<<msg.greeting<<endl;
 
-		//still need to send to receiver 2
 	}
 
 	cout<<"Sender 997 terminated"<<endl;
