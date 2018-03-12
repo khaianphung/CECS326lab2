@@ -12,7 +12,7 @@ sender 997
 	./sender997.out
   
 sender 251 (sender 2)
-	g++ -std=c++0x sender2.cpp -lprotobuf patch64.o -o sender251.out
+	 g++ -std=c++0x -no-pie sender2.cpp  patch64.o -o sender251.out
 	./sender251.out
    
 sender 257 (sender 3)
@@ -27,5 +27,3 @@ manually deleting the queue
 	deletion
 	ipcrm msg <the queue number you want to delete>
 
-
--lprotobuf
