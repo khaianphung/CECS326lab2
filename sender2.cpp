@@ -22,7 +22,13 @@ This sender is 251
 
 using namespace std;
 
-//defined struct buf in get_info.h 
+// declare my message buffer
+struct buf 
+{
+	long mtype; // required
+	char greeting[50]; // mesg content
+};
+
 
 int main() 
 {
@@ -46,6 +52,10 @@ int main()
 		msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0); // reading
 	}
 	
+
+	//get_info function
+	get_info(qid,  (struct msgbuf *)&msg, size, 112);
+
 	cout<<"Sender 251 terminated"<<endl;
 	exit(0);
 	
