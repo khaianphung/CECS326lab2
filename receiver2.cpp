@@ -26,34 +26,68 @@ int main()
 	// find existing queue
 	int qid = msgget(ftok(".",'u'), 0);
 
+	//use this code to test receiver2, sender 997, and sender 257 by themselves
+	//int qid = msgget(ftok(".",'u'), IPC_EXCL|IPC_CREAT|0600);
 
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
 	
 	int counter = 0;
-	while(counter <5000)
-	{
-		//getting a 997 message
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) >= 0 )
-		{
-			cout << "Sender 997: " << msg.greeting << endl;
-
-			//sending ack message
-			strcpy(msg.greeting, "Ack from Receiver 2");
-			msg.mtype = 997; 
-			msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-			
-		}
-
-		//getting a 257 message
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 257, 0) >= 0)
-		{
-			cout << "Sender 257: " << msg.greeting << endl;
-		}
+	int switchmtype = 997; 
 	
+	bool sender997 = true;
+	bool sender257 = true;
+
+	while(counter < 5000)
+	{
+		//swapping the mtype parameter for the msgrcv function
+		if( (sender997 == true && switchmtype == 257) || sender257 == false)
+		{
+			switchmtype = 997;
+		}	
+		else if( (sender257 == true && switchmtype == 997) || sender997 == false )
+		{
+			switchmtype = 257;
+		}
+		else
+		{
+			switchmtype = IPC_NOWAIT;
+		}
+		
+		//getting a message
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, switchmtype, 0) >= 0)
+		{
+			if(msg.mtype == 997)
+			{
+				if(strcmp(msg.greeting, "Sender 997 terminated") == 0)
+				{
+					cout << msg.greeting << endl;
+					sender997 = false;
+				}
+				else
+				{
+					cout << "Sender 997: " << msg.greeting << endl;
+
+					//sending ack message
+					strcpy(msg.greeting, "Ack from Receiver 2");
+					msg.mtype = 111; 
+					msgsnd(qid, (struct msgbuf *)&msg, size, 0);
+				}
+			}
+			else if(msg.mtype == 257)
+			{
+				cout << "Sender 257: " << msg.greeting << endl;
+			}
+		}
+
+		//displaying counter
 		counter++;
 		cout<<"Counter: "<<counter<<endl;
+
+		//checking to see if sender 997 and 257 are still active
+		cout << "boolSender997: " << sender997 << endl;
+		cout << "boolSender257: " << sender257 << endl; 
 		
 	}
 
@@ -63,7 +97,7 @@ int main()
 	strcpy(msg.greeting, "Receiver 2 has terminated");
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 	
-	cout << "Receiver2 terminated" << endl;
+	cout << "Receiver 2 terminated" << endl;
 	
 	exit(0);
 }

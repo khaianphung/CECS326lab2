@@ -41,21 +41,23 @@ int main()
 		int r = rand() % ((int) pow(2,32) - 1);
 		string c = to_string(r);
 		msg.mtype = 257; 	
-		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 		strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
-		cout<<"257 sent to Receiver 1 Number :"<<r<<endl;
+		cout << r << endl;
 
 		//this is probably an error
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, 113, IPC_NOWAIT) >= 0)
 		{
+			cout<<"Sender 257 terminated"<<endl;
 			exit(0);
 		}
+		else if(msgrcv(qid, (struct msgbuf *)&msg, size, 257, IPC_NOWAIT) < 0) //if there isn't a messsage with mtype 251, then send again
+		{
+			msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+		}	
 	
-		cout<<"Counter: "<<counter<<endl;
-		counter++;
 	}
 
-	cout<<"Sender 257 terminated"<<endl;
+	
 	exit(0);
 }
 

@@ -1,12 +1,12 @@
 What each program should do
 
-receiver 1
+receiver 1 (DONE)
   receives message and display the VALUE and SENDER'S IDENTITY
     receives only from 251 and 997
   sends acknowledgement to 997 
   TERMINATES only after 251 and 997 terminates
   
-receiver 2
+receiver 2 (DONEish)
   receives message and display the VALUE and SENDER'S IDENTITY
       receives only from 257 and 997
   sends acknowledgement to 997 
@@ -17,11 +17,11 @@ sender 997
   receives acknowledgement from receivers
   TERMINATES when it gets/observes a random number smaller than 100
   
-sender 257
+sender 257 (DONE)
   sends random number (32-bit value) to receiver 2
   TERMINATES when its receiver stops receiving event notification (i think this means when receiver 2 terminates)
 
-sender 251
+sender 251 (DONE)
   sends random number (32-bit value) to receiver 1
   
   TERMINATES on a 'kill' command from a separate terminal
