@@ -36,10 +36,15 @@ int main()
 	// find existing queue
 	int qid = msgget(ftok(".",'u'), 0);
 
-	
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
+	//get_info function
+	msg.mtype = 251;
+	strcpy(msg.greeting, "Sender 251 terminated");
+	get_info(qid,  (struct msgbuf *)&msg, size, 251);
+
+
 	//For Receiver 1
 	bool play = true;
 	while(play)
@@ -49,14 +54,18 @@ int main()
 		string c = to_string(r);
 		msg.mtype = 251; 	
 		strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
-		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-		cout<<r<<endl;
+
+		//if there isn't a messsage with mtype 251, then send again
+		if(msgrcv(qid, (struct msgbuf *)&msg, size, 251, IPC_NOWAIT) < 0)
+		{
+			msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+		}	
+		
+		cout<< r << endl;
 	}
 	
 
-	//get_info function
-	get_info(qid,  (struct msgbuf *)&msg, size, 112);
-
+	
 	cout<<"Sender 251 terminated"<<endl;
 	exit(0);
 	

@@ -42,6 +42,8 @@ int main()
 		//randomly creating 32 bit values numbers
 		r = rand() % ((int) pow(2,32) - 1);
 		string c = to_string(r);
+		
+		cout << r << endl;
 
 
 		//Sending to receiver 1 and 2
@@ -50,13 +52,15 @@ int main()
 		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 		
 	
-		msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0); // reading
+		msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0); // reading
 		cout<<msg.greeting<<endl;
 
-
-		
 	}
 
+	//sending last message to receiver 1
+	msg.mtype = 997; 	
+	strcpy(msg.greeting,"Sender 997 terminated"); // putting randomized number into the msg
+	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 	cout<<"Sender 997 terminated"<<endl;
 	
 

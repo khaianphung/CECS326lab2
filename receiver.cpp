@@ -33,35 +33,59 @@ int main()
 	int size = sizeof(msg)-sizeof(long);
 
 	bool play = true;
+	bool sender997 = true;
+	bool sender251 = true;
 	while (play)
 	{
 		//getting a 997 message
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) >= 0)
 		{
-			cout << "Sender 997: " << msg.greeting << endl;
+			if(msg.greeting == "Sender 997 terminated")
+			{
+				cout << msg.greeting << endl;
+				sender997 = false;
+			}
+			else
+			{
+				cout << "Sender 997: " << msg.greeting << endl;
 
-			//sending ack message
-			strcpy(msg.greeting, "Ack from Receiver 1");
-			msg.mtype = 997; 
-			msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-
+				//sending ack message
+				strcpy(msg.greeting, "Ack from Receiver 1");
+				msg.mtype = 111; 
+				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
+			}
+			
 		}
 
 		//getting a 251 message
 		if(msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) >= 0)
 		{
-			cout << "Sender 251: " << msg.greeting << endl;
+			
+			if(msg.greeting == "Sender 251 terminated")
+			{
+				cout << msg.greeting << endl;
+				sender251 = false;
+			}
+			else
+			{
+				cout << "Sender 251: " << msg.greeting << endl;
+			}
 		}
 		
-		//if both sender 997 and 251 are terminated
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, IPC_NOWAIT) < 0 && 
-		    msgrcv(qid, (struct msgbuf *)&msg, size, 251, IPC_NOWAIT) < 0) 
+
+		if(sender997 == false && sender251 == false)
 		{
-			exit(0);
-		}
+			play = false;
+		}			
+		//if both sender 997 and 251 are terminated
+		//if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) < 0 && 
+		//    msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) < 0) 
+		//{
+		//	exit(0);
+		//}
 	}
 
-	cout<<"Receiver1 terminated"<<endl;
+	cout<<"Receiver 1 terminated"<<endl;
 	exit(0);
 }
 
