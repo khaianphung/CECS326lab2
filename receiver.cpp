@@ -35,54 +35,68 @@ int main()
 	bool play = true;
 	bool sender997 = true;
 	bool sender251 = true;
+	int switchmtype = 997; 
+
 	while (play)
-	{
-		//getting a 997 message
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) >= 0)
+	{		
+		//swapping the mtype parameter for the msgrcv function
+		if( (sender997 == true && switchmtype == 251) || sender251 == false)
 		{
-			if(msg.greeting == "Sender 997 terminated")
-			{
-				cout << msg.greeting << endl;
-				sender997 = false;
-			}
-			else
-			{
-				cout << "Sender 997: " << msg.greeting << endl;
-
-				//sending ack message
-				strcpy(msg.greeting, "Ack from Receiver 1");
-				msg.mtype = 111; 
-				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-			}
-			
+			switchmtype = 997;
+		}	
+		else if( (sender251 == true && switchmtype == 997) || sender997 == false )
+		{
+			switchmtype = 251;
 		}
-
-		//getting a 251 message
-		if(msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) >= 0)
+		else
 		{
-			
-			if(msg.greeting == "Sender 251 terminated")
-			{
-				cout << msg.greeting << endl;
-				sender251 = false;
-			}
-			else
-			{
-				cout << "Sender 251: " << msg.greeting << endl;
-			}
+			switchmtype = IPC_NOWAIT;
 		}
 		
+		//getting a 997 message
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, switchmtype, 0) >= 0)
+		{
+			if(msg.mtype == 997)
+			{
+				if(strcmp(msg.greeting, "Sender 997 terminated") == 0)
+				{
+					cout << msg.greeting << endl;
+					sender997 = false;
+				}
+				else
+				{
+					cout << "Sender 997: " << msg.greeting << endl;
 
+					//sending ack message
+					strcpy(msg.greeting, "Ack from Receiver 1");
+					msg.mtype = 111; 
+					msgsnd(qid, (struct msgbuf *)&msg, size, 0);
+				}
+			}
+			else if(msg.mtype == 251)
+			{
+				if(strcmp(msg.greeting, "Sender 251 terminated") == 0)
+				{
+					cout << msg.greeting << endl;
+					sender251 = false;
+				}
+				else
+				{
+					cout << "Sender 251: " << msg.greeting << endl;
+				}
+			}
+				
+		}
+
+		
 		if(sender997 == false && sender251 == false)
 		{
 			play = false;
-		}			
-		//if both sender 997 and 251 are terminated
-		//if (msgrcv(qid, (struct msgbuf *)&msg, size, 997, 0) < 0 && 
-		//    msgrcv(qid, (struct msgbuf *)&msg, size, 251, 0) < 0) 
-		//{
-		//	exit(0);
-		//}
+		}
+		
+		//checking to see if sender 997 and 251 are still active
+		cout << "boolSender997: " << sender997 << endl;
+		cout << "boolSender251: " << sender251 << endl;  		
 	}
 
 	cout<<"Receiver 1 terminated"<<endl;
