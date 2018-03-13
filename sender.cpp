@@ -34,26 +34,67 @@ int main()
 	int size = sizeof(msg)-sizeof(long);
 	
 	int r = 200;
-	
-	// get out of loop when it randomizes a number less than 100
+	bool receiver2 = true;
+
+
+	//sending mtype 9971 for receiver 1
+	//mtype 9972 for receiver 2
+	int currentMtype = 9972;
+	//sending get out of loop when it randomizes a number less than 100
 	while(r>100)
 	{
 
 		//randomly creating 32 bit values numbers
 		r = rand() % ((int) pow(2,32) - 1);
 		string c = to_string(r);
-		
+
 		cout << r << endl;
 
+		if(currentMtype == 9972 && receiver2 == true)
+		{	
+			currentMtype = 9971;
+			
+			
+			//if there isn't a messsage with mtype 1, then send message
+			if(msgrcv(qid, (struct msgbuf *)&msg, size, 111, IPC_NOWAIT) < 0)
+			{	
+				msg.mtype = 9971; 	
+				strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
+				msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+				
+				cout << "Sent to Receiver 1" <<  endl;
+			}
 
-		//Sending to receiver 1 and 2
-		msg.mtype = 997; 	
-		strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
-		msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+			msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0);
+			cout << msg.greeting << endl;
+		}
+		else if( receiver2 == false || currentMtype == 9971 )
+		{	
+			if(strcmp(msg.greeting, "Receiver 2 has terminated") == 0)
+			{
+				receiver2 = false;	
+			}
+
+			currentMtype = 9972;
+			
+			
+			
+			//if there isn't a messsage with mtype 222, then send message
+			if(msgrcv(qid, (struct msgbuf *)&msg, size, 222, IPC_NOWAIT) < 0)
+			{
+				msg.mtype = 9972; 	
+				strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
+				msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+
+				cout << "Sent to Receiver 1" <<  endl;
+			}
+
+			msgrcv(qid, (struct msgbuf *)&msg, size, 222, 0);
+			cout << msg.greeting << endl;
+		}
+
 		
-	
-		msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0); // reading
-		cout<<msg.greeting<<endl;
+
 
 	}
 

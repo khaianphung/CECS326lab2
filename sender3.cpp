@@ -45,12 +45,12 @@ int main()
 		cout << r << endl;
 
 		//this is probably an error
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 113, IPC_NOWAIT) >= 0)
+		if (msgrcv(qid, (struct msgbuf *)&msg, size, 333, IPC_NOWAIT) >= 0)
 		{
 			cout<<"Sender 257 terminated"<<endl;
 			exit(0);
 		}
-		else if(msgrcv(qid, (struct msgbuf *)&msg, size, 257, IPC_NOWAIT) < 0) //if there isn't a messsage with mtype 251, then send again
+		else if(msgrcv(qid, (struct msgbuf *)&msg, size, 257, IPC_NOWAIT) < 0) //if there isn't a messsage with mtype 257, then send again
 		{
 			msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 		}	

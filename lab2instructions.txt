@@ -1,3 +1,10 @@
+to do:
+-work together receiver 1 and receiver 2 and sender997 work together
+-remember to make the queue empty before we delete it
+-remember to delete queue
+
+
+
 What each program should do
 
 receiver 1 (DONE)

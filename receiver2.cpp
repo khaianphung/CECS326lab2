@@ -34,7 +34,7 @@ int main()
 	
 	
 	int counter = 0;
-	int switchmtype = 997; 
+	int switchmtype = 9972; 
 	
 	bool sender997 = true;
 	bool sender257 = true;
@@ -44,9 +44,9 @@ int main()
 		//swapping the mtype parameter for the msgrcv function
 		if( (sender997 == true && switchmtype == 257) || sender257 == false)
 		{
-			switchmtype = 997;
+			switchmtype = 9972;
 		}	
-		else if( (sender257 == true && switchmtype == 997) || sender997 == false )
+		else if( (sender257 == true && switchmtype == 9972) || sender997 == false )
 		{
 			switchmtype = 257;
 		}
@@ -58,7 +58,7 @@ int main()
 		//getting a message
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, switchmtype, 0) >= 0)
 		{
-			if(msg.mtype == 997)
+			if(msg.mtype == 9972)
 			{
 				if(strcmp(msg.greeting, "Sender 997 terminated") == 0)
 				{
@@ -71,7 +71,7 @@ int main()
 
 					//sending ack message
 					strcpy(msg.greeting, "Ack from Receiver 2");
-					msg.mtype = 111; 
+					msg.mtype = 222; 
 					msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 				}
 			}
@@ -79,10 +79,11 @@ int main()
 			{
 				cout << "Sender 257: " << msg.greeting << endl;
 			}
+
+			counter++;
 		}
 
 		//displaying counter
-		counter++;
 		cout<<"Counter: "<<counter<<endl;
 
 		//checking to see if sender 997 and 257 are still active
@@ -91,9 +92,13 @@ int main()
 		
 	}
 
-	//probably wrong
+	//sending one last message to sender 997
+	msg.mtype = 222; 
+	strcpy(msg.greeting, "Receiver 2 has terminated");
+	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
+
 	//sending exit event to sender 257
-	msg.mtype = 113; 
+	msg.mtype = 333; 
 	strcpy(msg.greeting, "Receiver 2 has terminated");
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 	

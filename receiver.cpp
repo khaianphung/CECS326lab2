@@ -35,16 +35,16 @@ int main()
 	bool play = true;
 	bool sender997 = true;
 	bool sender251 = true;
-	int switchmtype = 997; 
+	int switchmtype = 9971; 
 
 	while (play)
 	{		
 		//swapping the mtype parameter for the msgrcv function
 		if( (sender997 == true && switchmtype == 251) || sender251 == false)
 		{
-			switchmtype = 997;
+			switchmtype = 9971;
 		}	
-		else if( (sender251 == true && switchmtype == 997) || sender997 == false )
+		else if( (sender251 == true && switchmtype == 9971) || sender997 == false )
 		{
 			switchmtype = 251;
 		}
@@ -53,10 +53,10 @@ int main()
 			switchmtype = IPC_NOWAIT;
 		}
 		
-		//getting a 997 message
+		//getting a message
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, switchmtype, 0) >= 0)
 		{
-			if(msg.mtype == 997)
+			if(msg.mtype == 9971)
 			{
 				if(strcmp(msg.greeting, "Sender 997 terminated") == 0)
 				{
