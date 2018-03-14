@@ -35,7 +35,7 @@ int main()
 	
 	
 	int counter = 0;
-	int switchmtype = ; 
+	int switchmtype = 257; 
 	
 	bool sender997 = true;
 	bool sender257 = true;
