@@ -1,6 +1,14 @@
 /* 
+Tam Tran
+Khai Phung
+Vincent Vu
+Bunly Buth
 
-This is sender 997
+filename: sender.cpp (Sender 997)
+This is sender 997. The sender repeatedly sends a random 32 bit value to receivers 1 
+and 2. Upon sending the value, the sender waits till it receives an acknowledgement 
+message from the receiver to resume. The program terminates when the generated random 
+32 bit value is a value less than 100.
 
 */
 

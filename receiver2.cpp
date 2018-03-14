@@ -1,6 +1,13 @@
 /* 
+Khai Phung
+Tam Tran
+Vincent Vu
+Bunly Buth
 
-This is the second receiver
+filename: receiver2.cpp
+This is the second receiver. This receiver receives messages from sender 257 and sender 997. 
+While receiving messages from those senders, the receiver ONLY sends back acknowledgement to
+sender 997. The receiver's termination condition is that the receiver receives 5000 messages.
 
 */
 
@@ -33,13 +40,16 @@ int main()
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
-	
+	//counter: variable to keep track of the amount of messages received.
+	//switchmtype: the parameter for the msgrcv function
 	int counter = 0;
 	int switchmtype = 257; 
 	
+	//Variables keep track of whether the senders have terminated
 	bool sender997 = true;
 	bool sender257 = true;
 
+	//Main loop
 	while(counter < 5000)
 	{
 		//swapping the mtype parameter for the msgrcv function
@@ -53,12 +63,16 @@ int main()
 		}
 		else
 		{
+			/*switchmtype of IPC_NOWAIT means that the program does not wait to receive 
+			the message. It immediately checks. Outputs -1 if the message is not present 
+			in the queue */
 			switchmtype = IPC_NOWAIT;
 		}
 		
 		//getting a message
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, switchmtype, 0) >= 0)
 		{
+			//Message from sender 997
 			if(msg.mtype == 9972)
 			{
 				//if sender 997 have terminated
@@ -77,12 +91,14 @@ int main()
 					msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 				}
 			}
+			//Message from sneder 257
 			else if(msg.mtype == 257)
 			{
 				//display sender number
 				cout << "Sender 257: " << msg.greeting << endl;
 			}
-
+			
+			//Increments after receiving a message successfully
 			counter++;
 		}
 

@@ -1,6 +1,14 @@
 /* 
+Tam Tran
+Khai Phung
+Vincent Vu
+Bunly Buth
 
-This is the first receiver
+filename: receiver1.cpp
+This is the first receiver. This receiver's role is to create the queue and receive messages from 
+both sender 257 and sender 997. While receiving messages from those senders, the receiver also 
+sends back an acknowledgement message to them beforce continuing. The program terminates when 
+both senders terminate.
 
 */
 
@@ -93,5 +101,3 @@ int main()
 	cout<<"Receiver 1 terminated"<<endl;
 	exit(0);
 }
-
-
