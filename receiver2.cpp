@@ -43,7 +43,7 @@ int main()
 	//counter: variable to keep track of the amount of messages received.
 	//switchmtype: the parameter for the msgrcv function
 	int counter = 0;
-	int switchmtype = ; 
+	int switchmtype = 257; 
 	
 	//Variables keep track of whether the senders have terminated
 	bool sender997 = true;
