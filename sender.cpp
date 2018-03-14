@@ -1,6 +1,14 @@
 /* 
+Tam Tran
+Khai Phung
+Vincent Vu
+Bunly Buth
 
-This is sender 997
+filename: sender.cpp (Sender 997)
+This is sender 997. The sender repeatedly sends a random 32 bit value to receivers 1 
+and 2. Upon sending the value, the sender waits till it receives an acknowledgement 
+message from the receiver to resume. The program terminates when the generated random 
+32 bit value is a value less than 100.
 
 */
 
@@ -33,6 +41,9 @@ int main()
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
+	//r: variable to hold the random 32 bit value
+	//Initially 200 to start the loop
+	//receiver2: variable that keeps track of receiver2 termination
 	int r = 200;
 	bool receiver2 = true;
 
@@ -48,7 +59,8 @@ int main()
 		string c = to_string(r);			//change char array to string
 
 		cout << r << endl;				//display random number
-
+		
+		//Precondition: if receiver2 is still active
 		if(currentMtype == 9972 && receiver2 == true)	//swapping mtypes
 		{	
 			currentMtype = 9971;			//change mytypes for conditional
@@ -66,7 +78,7 @@ int main()
 			msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0);	//wait to receive acknowledge message from receiver 1
 			cout << msg.greeting << endl;
 		}
-		else if(receiver2 == false || currentMtype == 9971 )	//swapping mtypes
+		else if(receiver2 == false || currentMtype == 9971 )	//swapping mtypes if receiver2 terminated or if its receiver1's turn
 		{	
 			if(strcmp(msg.greeting, "Receiver 2 has terminated") == 0)	//check to see if receiver 2 has terminated
 			{
