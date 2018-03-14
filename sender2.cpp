@@ -1,6 +1,13 @@
 /* 
+Khai Phung
+Vincent Vu
+Tam Tran
 
-This sender is 251
+filename: sender2.cpp (sender 251)
+This sender is sender 251. Sender 251's job is to send a random 32 bit number to 
+receiver 1. It's continues to send until the user kills the program
+using a kill command. On kill command, the program sends one last message to notify 
+the receiver 1 that it has terminated.
 
 */
 
@@ -47,7 +54,9 @@ int main()
 
 
 	//For Receiver 1
+	//play: Condition for main loop to continue
 	bool play = true;
+	//Main loop
 	while(play)
 	{
 		int r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
