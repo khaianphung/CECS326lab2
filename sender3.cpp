@@ -1,6 +1,12 @@
 /* 
+Tam Tran
+Khai Phung
+Vincent Vu
+Bunly Buth
 
-This is sender 257
+filename: sender3.cpp (sender 257)
+This is sender 257. Sender 257 repeatedly sends a random 32 bit value to receiver 2.
+Sender 257 terminates when receiver 2 terminates.
 
 */
 
@@ -32,8 +38,10 @@ int main()
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 
-
+	//play: Condition to start the main loop
 	bool play = true;
+	
+	//Main loop
 	while (play)
 	{
 
@@ -51,6 +59,7 @@ int main()
 			cout<<"Sender 257 terminated"<<endl;
 			exit(0);
 		}
+		//if receiver 2 has not terminated. 
 		else if(msgrcv(qid, (struct msgbuf *)&msg, size, 257, IPC_NOWAIT) < 0) //if this haven't sent a message yet, then send one
 		{
 			msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
