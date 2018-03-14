@@ -29,12 +29,13 @@ int main()
 	//use this code to test receiver2, sender 997, and sender 257 by themselves
 	//int qid = msgget(ftok(".",'u'), IPC_EXCL|IPC_CREAT|0600);
 
+	//initialize buf
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
 	
 	int counter = 0;
-	int switchmtype = 9972; 
+	int switchmtype = ; 
 	
 	bool sender997 = true;
 	bool sender257 = true;
@@ -60,16 +61,17 @@ int main()
 		{
 			if(msg.mtype == 9972)
 			{
+				//if sender 997 have terminated
 				if(strcmp(msg.greeting, "Sender 997 terminated") == 0)
 				{
 					cout << msg.greeting << endl;
 					sender997 = false;
 				}
-				else
+				else	//send acknowledgement to sender 997
 				{
+					//display sender number
 					cout << "Sender 997: " << msg.greeting << endl;
 
-					//sending ack message
 					strcpy(msg.greeting, "Ack from Receiver 2");
 					msg.mtype = 222; 
 					msgsnd(qid, (struct msgbuf *)&msg, size, 0);
@@ -77,6 +79,7 @@ int main()
 			}
 			else if(msg.mtype == 257)
 			{
+				//display sender number
 				cout << "Sender 257: " << msg.greeting << endl;
 			}
 
@@ -102,6 +105,7 @@ int main()
 	strcpy(msg.greeting, "Receiver 2 has terminated");
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 	
+	//display that receiver 2 has terminated
 	cout << "Receiver 2 terminated" << endl;
 	
 	exit(0);

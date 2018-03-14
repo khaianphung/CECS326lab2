@@ -29,7 +29,7 @@ int main()
 	//find existing queue
 	int qid = msgget(ftok(".",'u'), 0);
 
-	
+	//initialize buf
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
@@ -38,63 +38,57 @@ int main()
 
 
 	//sending mtype 9971 for receiver 1
-	//mtype 9972 for receiver 2
+	//sending mtype 9972 for receiver 2
 	int currentMtype = 9972;
-	//sending get out of loop when it randomizes a number less than 100
+
+	//get out of loop when it randomizes a number less than 100
 	while(r>100)
 	{
+		r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
+		string c = to_string(r);			//change char array to string
 
-		//randomly creating 32 bit values numbers
-		r = rand() % ((int) pow(2,32) - 1);
-		string c = to_string(r);
+		cout << r << endl;				//display random number
 
-		cout << r << endl;
-
-		if(currentMtype == 9972 && receiver2 == true)
+		if(currentMtype == 9972 && receiver2 == true)	//swapping mtypes
 		{	
-			currentMtype = 9971;
-			
+			currentMtype = 9971;			//change mytypes for conditional
 			
 			//if there isn't a messsage with mtype 1, then send message
 			if(msgrcv(qid, (struct msgbuf *)&msg, size, 111, IPC_NOWAIT) < 0)
 			{	
-				msg.mtype = 9971; 	
+				msg.mtype = 9971; 		//change mtype for msg
 				strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 				
 				cout << "Sent to Receiver 1" <<  endl;
 			}
 
-			msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0);
+			msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0);	//wait to receive acknowledge message from receiver 1
 			cout << msg.greeting << endl;
 		}
-		else if( receiver2 == false || currentMtype == 9971 )
+		else if(receiver2 == false || currentMtype == 9971 )	//swapping mtypes
 		{	
-			if(strcmp(msg.greeting, "Receiver 2 has terminated") == 0)
+			if(strcmp(msg.greeting, "Receiver 2 has terminated") == 0)	//check to see if receiver 2 has terminated
 			{
 				receiver2 = false;	
 			}
 
-			currentMtype = 9972;
+			currentMtype = 9972;			//change mytypes for conditional
 			
-			
-			
+		
 			//if there isn't a messsage with mtype 222, then send message
 			if(msgrcv(qid, (struct msgbuf *)&msg, size, 222, IPC_NOWAIT) < 0)
 			{
-				msg.mtype = 9972; 	
+				msg.mtype = 9972; 		//change mtype for msg
 				strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 
 				cout << "Sent to Receiver 1" <<  endl;
 			}
 
-			msgrcv(qid, (struct msgbuf *)&msg, size, 222, 0);
+			msgrcv(qid, (struct msgbuf *)&msg, size, 222, 0);	//wait to receive acknowledge message from receiver 2
 			cout << msg.greeting << endl;
 		}
-
-		
-
 
 	}
 

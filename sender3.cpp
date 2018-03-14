@@ -28,7 +28,7 @@ int main()
 	// find exisiting queue
 	int qid = msgget(ftok(".",'u'), 0);
 
-	
+	//initialize buf
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 
@@ -37,27 +37,27 @@ int main()
 	while (play)
 	{
 
-		//randomly creating 32 bit values numbers
-		int r = rand() % ((int) pow(2,32) - 1);
-		string c = to_string(r);
-		msg.mtype = 257; 	
-		strcpy(msg.greeting,c.c_str()); // putting randomized number into the msg
-		cout << r << endl;
+		
+		int r = rand() % ((int) pow(2,32) - 1); 	//randomly creating 32 bit values numbers
+		string c = to_string(r);			//change char array to string
+		msg.mtype = 257; 				//changing mtype to send to receiver 2
+		strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
+		cout << r << endl;				//display random number
 
-		//this is probably an error
+		//checking if receiver 2 is terminated
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, 333, IPC_NOWAIT) >= 0)
 		{
+			//terminates program
 			cout<<"Sender 257 terminated"<<endl;
 			exit(0);
 		}
-		else if(msgrcv(qid, (struct msgbuf *)&msg, size, 257, IPC_NOWAIT) < 0) //if there isn't a messsage with mtype 257, then send again
+		else if(msgrcv(qid, (struct msgbuf *)&msg, size, 257, IPC_NOWAIT) < 0) //if this haven't sent a message yet, then send one
 		{
 			msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
 		}	
 	
 	}
 
-	
 	exit(0);
 }
 

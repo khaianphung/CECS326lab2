@@ -27,12 +27,14 @@ int main()
 	// create the message queue
 	int qid = msgget(ftok(".",'u'), IPC_EXCL|IPC_CREAT|0600);
 
-	
-
+	//initialize buf
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 
+	//condition for staying in the loop
 	bool play = true;
+
+	//used for checking if senders have terminated
 	bool sender997 = true;
 	bool sender251 = true;
 	int switchmtype = 9971; 
@@ -57,24 +59,26 @@ int main()
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, switchmtype, 0) >= 0)
 		{
 			if(msg.mtype == 9971)
-			{
+			{	
+				//if sender 997 have terminated
 				if(strcmp(msg.greeting, "Sender 997 terminated") == 0)
 				{
 					cout << msg.greeting << endl;
 					sender997 = false;
 				}
-				else
+				else	//send acknowledgement to sender 997
 				{
+					//display sender number
 					cout << "Sender 997: " << msg.greeting << endl;
 
-					//sending ack message
 					strcpy(msg.greeting, "Ack from Receiver 1");
 					msg.mtype = 111; 
 					msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 				}
 			}
 			else if(msg.mtype == 251)
-			{
+			{	
+				//check if sender 251 have terminated
 				if(strcmp(msg.greeting, "Sender 251 terminated") == 0)
 				{
 					cout << msg.greeting << endl;
@@ -82,13 +86,14 @@ int main()
 				}
 				else
 				{
+					//display sender number
 					cout << "Sender 251: " << msg.greeting << endl;
 				}
 			}
 				
 		}
 
-		
+		//if both senders are terminated
 		if(sender997 == false && sender251 == false)
 		{
 			play = false;
@@ -99,6 +104,7 @@ int main()
 		cout << "boolSender251: " << sender251 << endl;  		
 	}
 
+	//display that receiver 1 has terminated
 	cout<<"Receiver 1 terminated"<<endl;
 	exit(0);
 }
