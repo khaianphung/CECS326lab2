@@ -25,10 +25,11 @@ using namespace std;
 // declare my message buffer
 struct buf 
 {
-	long mtype; // required
-	char greeting[50]; // mesg content
+	long mtype; 		// required identifier
+	char greeting[50]; 	// mesg content
+	bool needAck;		// to know if receiver needs to send an ack msg to sender 997
+	bool terminate;		//used to check for termination
 };
-
 
 int main() 
 {
@@ -40,28 +41,25 @@ int main()
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
-	//get_info function
-	msg.mtype = 251;
-	strcpy(msg.greeting, "Sender 251 terminated");
+	//get_info function for the patch64.o file
+	msg.mtype = 111;
+	msg.terminate = true;
 	get_info(qid,  (struct msgbuf *)&msg, size, 251);
 
 
-	//For Receiver 1
 	bool play = true;
 	while(play)
 	{
-		int r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
-		string c = to_string(r);			//change char array to string
-		msg.mtype = 251; 				//changing mtype to send to receiver 1
+		int r = rand() % ((int) pow(2,32) - 1);		// randomly creating 32 bit values numbers
+		string c = to_string(r);			// change char array to string
+		msg.mtype = 111; 				// changing mtype to send to receiver 1
+		msg.needAck = false;				// this sender does not need ack messages		
+		msg.terminate = false;				// not terminate yet
 		strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
 
-		//if this haven't sent a message yet, then send one
-		if(msgrcv(qid, (struct msgbuf *)&msg, size, 251, IPC_NOWAIT) < 0)
-		{
-			msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
-		}	
+		msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
 		
-		cout<< r << endl;				//display random number
+		cout << r << endl;		// display random number
 	}
 	
 	cout<<"Sender 251 terminated"<<endl;
