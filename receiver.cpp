@@ -1,6 +1,14 @@
 /* 
+Tam Tran
+Khai Phung
+Vincent Vu
+Bunly Buth
 
-This is the first receiver
+filename: receiver1.cpp
+This is the first receiver. This receiver's role is to create the queue and receive messages from 
+both sender 257 and sender 997. While receiving messages from those senders, the receiver also 
+sends back an acknowledgement message to them beforce continuing. The program terminates when 
+both senders terminate.
 
 */
 
@@ -39,6 +47,7 @@ int main()
 	bool sender251 = true;
 	int switchmtype = 9971; 
 
+	//Main loop
 	while (play)
 	{		
 		//swapping the mtype parameter for the msgrcv function
@@ -52,12 +61,15 @@ int main()
 		}
 		else
 		{
+			//switchmtype when used in the msgrcv function checks for a message immediately. If message of 
+			//mtype is not in queue, sends back -1.
 			switchmtype = IPC_NOWAIT;
 		}
 		
 		//getting a message
 		if (msgrcv(qid, (struct msgbuf *)&msg, size, switchmtype, 0) >= 0)
 		{
+			//message from sender 997
 			if(msg.mtype == 9971)
 			{	
 				//if sender 997 have terminated
@@ -76,6 +88,7 @@ int main()
 					msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 				}
 			}
+			//message from sender 251
 			else if(msg.mtype == 251)
 			{	
 				//check if sender 251 have terminated
@@ -96,6 +109,7 @@ int main()
 		//if both senders are terminated
 		if(sender997 == false && sender251 == false)
 		{
+			//Ends the main loop
 			play = false;
 		}
 		
