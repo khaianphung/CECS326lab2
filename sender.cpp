@@ -86,6 +86,7 @@ int main()
 		
 			if( strcmp(msg.greeting, "Ack from Receiver 1") == 0 )
 			{	
+				cout << msg.greeting << endl;
 				string c = to_string(r);			//change char array to string
 				strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
 				msg.mtype = 111;
@@ -94,8 +95,9 @@ int main()
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending	
 			}
 
-			if( strcmp(msg.greeting, "Ack from Receiver 1") == 0 )
+			if( strcmp(msg.greeting, "Ack from Receiver 2") == 0 )
 			{
+				cout << msg.greeting << endl;
 				string c = to_string(r);			//change char array to string
 				strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
 				msg.mtype = 222;

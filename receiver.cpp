@@ -63,7 +63,6 @@ int main()
 			else				//sender still active
 			{
 				cout << "Sender 997: " << msg.greeting << endl;
-
 				strcpy(msg.greeting, "Ack from Receiver 1");
 				msg.mtype = 333; 	//mtype for sending ack message
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
@@ -71,9 +70,9 @@ int main()
 			
 			
 		}
-		else					// message from sender 251
+		else if(msg.needAck == false)					// message from sender 251
 		{
-			if(strcmp(msg.greeting, "Sender 251 terminated") ==)
+			if(strcmp(msg.greeting, "Sender 251 terminated") == 0)
 			{
 				cout << msg.greeting << endl;
 				sender251 = false;
