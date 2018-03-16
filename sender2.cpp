@@ -50,8 +50,10 @@ int main()
 	
 	//get_info function for the patch64.o file
 	msg.mtype = 111;
+	strcpy(msg.greeting,"Sender 251 terminated");
+	msg.needAck = false;				// this sender does not need ack messages
 	msg.terminate = true;
-	get_info(qid,  (struct msgbuf *)&msg, size, 251);
+	get_info(qid,  (struct msgbuf *)&msg, size, );
 
 
 	bool play = true;

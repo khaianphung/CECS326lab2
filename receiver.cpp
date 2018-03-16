@@ -56,29 +56,31 @@ int main()
 		
 		if(msg.needAck == true)			//message from sender 997
 		{
-			if(msg.terminate == false) 	//checking for termination
+			if(msg.terminate == true) 	//checking for termination
+			{
+				sender997 = false;
+			}
+			else				//sender still active
 			{
 				cout << "Sender 997: " << msg.greeting << endl;
 
 				strcpy(msg.greeting, "Ack from Receiver 1");
-				msg.mtype = 333; 
+				msg.mtype = 333; 	//mtype for sending ack message
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-			}	
-			else				//sender still active
-			{
-				sender997 = false;
-			}
+			}			
+			
 			
 		}
 		else					// message from sender 251
 		{
-			if(msg.terminate == false) 	//checking for termination
+			if(strcmp(msg.greeting, "Sender 251 terminated") ==)
+			{
+				cout << msg.greeting << endl;
+				sender251 = false;
+			}
+			else
 			{
 				cout << "Sender 251: " << msg.greeting << endl;
-			}
-			else				//sender still active
-			{
-				sender251 = false;
 			}
 		}
 
