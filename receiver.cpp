@@ -73,7 +73,7 @@ int main()
 		}
 		else					// message from sender 251
 		{
-			if(strcmp(msg.greeting, "Sender 251 terminated") ==)
+			if(strcmp(msg.greeting, "Sender 251 terminated") == 0)
 			{
 				cout << msg.greeting << endl;
 				sender251 = false;
