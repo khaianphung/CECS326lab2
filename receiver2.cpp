@@ -24,8 +24,10 @@ using namespace std;
 // declare my message buffer
 struct buf 
 {
-	long mtype; // required
-	char greeting[50]; // mesg content
+	long mtype;		// required
+	char greeting[50]; 	// mesg content
+	bool needAck;		// check if message needs an acknowledgement back
+	bool terminate;		//Check for termination
 };
 
 int main() 
