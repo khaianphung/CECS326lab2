@@ -53,7 +53,7 @@ int main()
 	strcpy(msg.greeting,"Sender 251 terminated");
 	msg.needAck = false;				// this sender does not need ack messages
 	msg.terminate = true;
-	get_info(qid,  (struct msgbuf *)&msg, size, );
+	get_info(qid,  (struct msgbuf *)&msg, size, 111);
 
 
 	bool play = true;
