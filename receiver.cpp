@@ -52,35 +52,36 @@ int main()
 	while (play)
 	{		
 		//receiving message
-		msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0);
-		
-		if(msg.needAck == true)			//message from sender 997
+		if(msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0) >= 0)
 		{
-			if(msg.terminate == true) 	//checking for termination
+			if(msg.needAck == false)	// message from sender 251
 			{
-				sender997 = false;
+				if(strcmp(msg.greeting, "Sender 251 terminated") == 0)	//if terminates
+				{
+					cout << msg.greeting << endl;
+					sender251 = false;
+				}
+				else	//not terminating
+				{
+					cout << "Sender 251: " << msg.greeting << endl;
+				}
 			}
-			else				//sender still active
+			else if(msg.needAck == true)	//message from sender 997
 			{
-				cout << "Sender 997: " << msg.greeting << endl;
-				strcpy(msg.greeting, "Ack from Receiver 1");
-				msg.mtype = 333; 	//mtype for sending ack message
-				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-				cout << "HERE: " << msg.greeting << endl;
-			}			
-			
-			
-		}
-		else if(msg.needAck == false)	// message from sender 251
-		{
-			if(strcmp(msg.greeting, "Sender 251 terminated") == 0)
-			{
-				cout << msg.greeting << endl;
-				sender251 = false;
-			}
-			else
-			{
-				cout << "Sender 251: " << msg.greeting << endl;
+				if(msg.terminate == true) 	//checking for termination
+				{
+					sender997 = false;
+				}
+				else				//sender still active
+				{
+					cout << "Sender 997: " << msg.greeting << endl;
+					strcpy(msg.greeting, "Ack from Receiver 1");
+					msg.mtype = 333; 	//mtype for sending ack message
+					while( msgsnd(qid, (struct msgbuf *)&msg, size, 0) == -1)	//if it can't send, display error
+					{
+						cout << "-1" << endl;
+					}
+				}			
 			}
 		}
 
