@@ -66,11 +66,12 @@ int main()
 				strcpy(msg.greeting, "Ack from Receiver 1");
 				msg.mtype = 333; 	//mtype for sending ack message
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
+				cout << "HERE: " << msg.greeting << endl;
 			}			
 			
 			
 		}
-		else if(msg.needAck == false)					// message from sender 251
+		else if(msg.needAck == false)	// message from sender 251
 		{
 			if(strcmp(msg.greeting, "Sender 251 terminated") == 0)
 			{
@@ -87,6 +88,7 @@ int main()
 		if(sender997 == false && sender251 == false)
 		{
 			play = false;
+		
 		}
 		
 		//checking to see if sender 997 and 251 are still active

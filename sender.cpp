@@ -74,7 +74,7 @@ int main()
 	msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
 
 	//get out of loop when it randomizes a number less than 100
-	while(r >= 100)
+	while(r >= -1)
 	{
 		r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
 
@@ -104,7 +104,7 @@ int main()
 				msg.needAck = true;				//this ack is needed from receiver
 				msg.terminate = false;				// not terminate yet
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending	
-			}		
+			}	
 		}
 		
 
@@ -113,7 +113,8 @@ int main()
 	//sending last message to receiver 1
 	msg.mtype = 111; 	
 	msg.terminate = true;
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+	//msgsnd(qid, (struct msgbuf *)&msg, size, 0); // sending
+
 	
 	//termination of this program
 	cout<<"Sender 997 terminated"<<endl;

@@ -42,7 +42,7 @@ int main()
 {
 
 	// find existing queue
-	int qid = msgget(ftok(".",'u'), 0);
+	int qid = fork();//msgget(ftok(".",'u'), 0);
 
 	//initialize buf
 	buf msg;
@@ -53,6 +53,7 @@ int main()
 	strcpy(msg.greeting,"Sender 251 terminated");
 	msg.needAck = false;				// this sender does not need ack messages
 	msg.terminate = true;
+
 	get_info(qid,  (struct msgbuf *)&msg, size, 111);
 
 
