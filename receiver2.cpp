@@ -28,12 +28,13 @@ struct buf
 	char greeting[50]; 	// mesg content
 	bool needAck;		// check if message needs an acknowledgement back
 	bool terminate;		//Check for termination
+	
 };
 
 int main() 
 {
 	// find existing queue
-	int qid = msgget(ftok(".",'u'), IPC_EXCL|IPC_CREAT|0600);//msgget(ftok(".",'u'), 0);
+	int qid = msgget(ftok(".",'u'), 0);
 
 	//use this code to test receiver2, sender 997, and sender 257 by themselves
 	//int qid = msgget(ftok(".",'u'), IPC_EXCL|IPC_CREAT|0600);
@@ -52,15 +53,15 @@ int main()
 	bool sender257 = true;
 
 	//Main loop
-	while (counter < 500000000000)//5000 is too low
+	while (counter < 50000000)//5000 is too low
 	{		
 		//receiving message
 		msgrcv(qid, (struct msgbuf *)&msg, size, 222, 0);
-		cout<<"Counter: "<<counter<<endl;
+		//cout<<"Counter: "<<counter<<endl;
 		
-		if(msg.needAck == true)			//message from sender 997
+		if(msg.needAck == true )			//message from sender 997
 		{
-			cout<<"SENDER 997"<<endl;
+			
 			if(msg.terminate == true) 	//checking for termination
 			{
 				sender997 = false;
@@ -76,12 +77,12 @@ int main()
 			
 			
 		}
-		else if(msg.needAck == false)	// message from sender 257
+		else if(msg.needAck == false )	// message from sender 257
 		{
-			cout<<"SENDER 257"<<endl;
+			
 			if(strcmp(msg.greeting, "Sender 257 terminated") == 0)
 			{
-				cout << msg.greeting << endl;
+				//cout << msg.greeting << endl;
 				sender257 = false;
 			}
 			else
@@ -89,16 +90,17 @@ int main()
 				cout << "Sender 257: " << msg.greeting << endl;
 			}
 		}
+		
 
 		counter++;
 		//checking if loop end because senders are terminated , not because exceed 5000 messages
-		cout << "boolSender997: " << sender997 << endl;
-		cout << "boolSender257: " << sender257 << endl;  		
+		//cout << "boolSender997: " << sender997 << endl;
+		//cout << "boolSender257: " << sender257 << endl;  		
 	}
 
 
 	///
-	/// delete all msg with mtype 111 in queue
+	/// delete all msg with mtype 222 in queue
 	///	
 	//display that receiver 1 has terminated
 	cout<<"Receiver 2 terminated"<<endl;

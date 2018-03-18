@@ -26,8 +26,9 @@ struct buf
 {
 	long mtype; 		// required identifier
 	char greeting[50]; 	// mesg content
-	bool needAck;		// to know if receiver needs to send an ack msg to sender 997
+	bool needAck;		// to know if receiver needs to send an ack msg to sender 257
 	bool terminate;		//used to check for termination
+	
 
 };
 
@@ -35,14 +36,14 @@ int main()
 {
 	
 	// find existing queue
-	int qid = fork();//msgget(ftok(".",'u'), 0);
+	int qid = msgget(ftok(".",'u'), 0);
 
 	//initialize buf
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
 	
 	
-	msg.mtype = 111;
+	msg.mtype = 222;
 	strcpy(msg.greeting,"Sender 257 terminated");
 	msg.needAck = false;				// this sender does not need ack messages
 	msg.terminate = true;
@@ -54,12 +55,33 @@ int main()
 	{
 		int r = rand() % ((int) pow(2,32) - 1);		// randomly creating 32 bit values numbers
 		string c = to_string(r);			// change char array to string
-		msg.mtype = 111; 				// changing mtype to send to receiver 1
-		msg.needAck = false;				// this sender does not need ack messages		
-		msg.terminate = false;				// not terminate yet
-		strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
+		
+		//does not start until 997 starts
+		// this makes it so that it controls how many messages are coming from sender 257
+		if(msgrcv(qid, (struct msgbuf *)&msg, size, 222, 0) >= 0)
+		{
+			if(msg.needAck == true) //if this a message is from  997, then send it back in the queue
+			{
+				msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// send msg 997 back so that receiver1 will read it
 
-		msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
+				//sending our a new 257 message
+				msg.mtype = 222; 				// changing mtype to send to receiver 2
+				msg.needAck = false;				// this sender does not need ack messages		
+				msg.terminate = false;				// not terminate yet
+				strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
+				msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending back the same 257 message
+			}	
+			else	//send message back 
+			{
+				msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending back the same 257 message
+\
+			}
+		}
+		else	//if there are no mtype 222 in queue, then send a mtype 222 message
+		{
+			msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// a new 251 message
+		}
+		
 		
 		cout << r << endl;		// display random number
 	}
@@ -68,4 +90,5 @@ int main()
 	exit(0);
 	
 }
+
 

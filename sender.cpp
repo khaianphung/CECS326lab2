@@ -31,6 +31,7 @@ struct buf
 	char greeting[50]; 	// mesg content
 	bool needAck;		// to know if receiver needs to send an ack msg to sender 997
 	bool terminate;		//used to check for termination
+	
 };
 
 int main() 
@@ -55,7 +56,7 @@ int main()
 	r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
 	string c = to_string(r);			//change char array to string
 
-	cout << r << endl;		//display random number
+	//cout << r << endl;		//display random number
 
 	//send for receiver 1
 	msg.mtype = 111; 				//change mtype for msg
@@ -69,7 +70,7 @@ int main()
 	msg.needAck = true;				//this ack is needed from receiver
 	msg.terminate = false;				// not terminate yet
 	strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
+	msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending IF YOU DONT PUT THIS IT WILL NEVER RUNS
 
 	//get out of loop when it randomizes a number less than 100
 	while(r >= 100)
