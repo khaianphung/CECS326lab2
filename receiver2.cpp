@@ -46,58 +46,29 @@ int main()
 	//counter: variable to keep track of the amount of messages received.
 	//switchmtype: the parameter for the msgrcv function
 	int counter = 0;
-	//int switchmtype = 257; 
-	
-	//Variables keep track of whether the senders have terminated
-	bool sender997 = true;
-	bool sender257 = true;
 
 	//Main loop
-	while (counter < 50000000)//5000 is too low
+	while (counter < 5000000)//5000 is too low
 	{		
 		//receiving message
 		msgrcv(qid, (struct msgbuf *)&msg, size, 222, 0);
 		//cout<<"Counter: "<<counter<<endl;
-		
-		if(msg.needAck == true )			//message from sender 997
+		if(msg.needAck == true)			//message from sender 997
 		{
-			
-			if(msg.terminate == true) 	//checking for termination
-			{
-				sender997 = false;
-			}
-			else				//sender still active
-			{
 				cout << "Sender 997: " << msg.greeting << endl;
 				strcpy(msg.greeting, "Ack from Receiver 2");
-				msg.mtype = 333; 	//mtype for sending ack message
+				msg.mtype = 444; 	//mtype for sending ack message
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-				
-			}			
-			
 			
 		}
-		else if(msg.needAck == false )	// message from sender 257
-		{
-			
-			if(strcmp(msg.greeting, "Sender 257 terminated") == 0)
-			{
-				//cout << msg.greeting << endl;
-				sender257 = false;
-			}
-			else
-			{
+		else {
 				cout << "Sender 257: " << msg.greeting << endl;
-			}
 		}
 		
 
-		counter++;
-		//checking if loop end because senders are terminated , not because exceed 5000 messages
-		//cout << "boolSender997: " << sender997 << endl;
-		//cout << "boolSender257: " << sender257 << endl;  		
+		counter++;	
 	}
-
+	system("pkill sender257.out");
 
 	///
 	/// delete all msg with mtype 222 in queue
@@ -106,5 +77,3 @@ int main()
 	cout<<"Receiver 2 terminated"<<endl;
 	exit(0);
 }
-
-

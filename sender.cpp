@@ -43,9 +43,6 @@ int main()
 	//initialize buf
 	buf msg;
 	int size = sizeof(msg)-sizeof(long);
-	
-	int r = 200;
-
 
 	//sending mtype 111 for receiver 1
 	//sending mtype 222 for receiver 2
@@ -53,80 +50,52 @@ int main()
 
 
 	//sending first pair of messages
-	r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
-	string c = to_string(r);			//change char array to string
+	int r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
 
 	//cout << r << endl;		//display random number
 
-	//send for receiver 1
-	msg.mtype = 111; 				//change mtype for msg
-	msg.needAck = true;				//this ack is needed from receiver
-	msg.terminate = false;				// not terminate yet
-	strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
-		
-	//send for receiver 2
-	msg.mtype = 222; 				//change mtype for msg
-	msg.needAck = true;				//this ack is needed from receiver
-	msg.terminate = false;				// not terminate yet
-	strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
-	msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending IF YOU DONT PUT THIS IT WILL NEVER RUNS
 
 	//get out of loop when it randomizes a number less than 100
 	while(r >= 100)
 	{
+		//send for receiver 1
+		string c = to_string(r);			//change char array to string
+		strcpy(msg.greeting,c.c_str());
+ 
+		msg.mtype = 111; 				//change mtype for msg
+		msg.needAck = true;				//this ack is needed from receiver
+		msg.terminate = false;				// not terminate yet
+		msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
+
+		msgrcv(qid, (struct msgbuf *)&msg, size, 333, 0);
+		cout << msg.greeting << endl;
+		
+		//send for receiver 2
+		c = to_string(r);			//change char array to string
+		strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
+		msg.mtype = 222; 				//change mtype for msg
+		msg.needAck = true;				//this ack is needed from receiver
+		msg.terminate = false;				// not terminate yet
+		msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending IF YOU DONT PUT THIS IT WILL NEVER RUNS
+		msgrcv(qid, (struct msgbuf *)&msg, size, 444, 0);
+		cout << msg.greeting << endl;
+		
 		r = rand() % ((int) pow(2,32) - 1);		//randomly creating 32 bit values numbers
 
 		cout << r << endl;		//display random number
 
-		//checking to receive ack from receiver 1 and 2
-		if (msgrcv(qid, (struct msgbuf *)&msg, size, 333, 0) >= 0)
-		{
-		
-			if( strcmp(msg.greeting, "Ack from Receiver 1") == 0 )
-			{	
-				cout << msg.greeting << endl;
-				
-				if(r < 100)
-				{	
-					strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
-					msg.mtype = 111;
-					msg.needAck = true;				//this ack is needed from receiver
-					msg.terminate = true;				// terminate
-					msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending	
-				}	
-				else
-				{
-					string c = to_string(r);			//change char array to string
-					strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
-					msg.mtype = 111;
-					msg.needAck = true;				//this ack is needed from receiver
-					msg.terminate = false;				// not terminate yet
-					msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending	
-				}
-			}
-
-			if( strcmp(msg.greeting, "Ack from Receiver 2") == 0 )
-			{
-				cout << msg.greeting << endl;
-		
-				if(r < 100)
-				{
-					msg.mtype = 222;
-					msg.needAck = true;				//this ack is needed from receiver
-					msg.terminate = true;				// terminate
-					msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending				
-				}
-				else
-				{
-					string c = to_string(r);			//change char array to string
-					strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
-					msg.mtype = 222;
-					msg.needAck = true;				//this ack is needed from receiver
-					msg.terminate = false;				// not terminate yet
-					msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending	
-				}
-			}	
+		if(r < 100) {
+			strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
+			msg.mtype = 111;
+			msg.needAck = true;				//this ack is needed from receiver
+			msg.terminate = true;				// terminate
+			msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
+	
+			strcpy(msg.greeting,c.c_str()); 		// putting randomized number into the msg
+			msg.mtype = 222;
+			msg.needAck = true;				//this ack is needed from receiver
+			msg.terminate = true;				// terminate
+			msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending
 		}
 		
 
