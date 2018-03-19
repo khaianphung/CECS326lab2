@@ -48,7 +48,7 @@ int main()
 	int counter = 0;
 
 	//Main loop
-	while (counter < 5000000)//5000 is too low
+	while (counter < 50000)//5000 is too low
 	{		
 		//receiving message
 		msgrcv(qid, (struct msgbuf *)&msg, size, 222, 0);
@@ -68,6 +68,10 @@ int main()
 
 		counter++;	
 	}
+	strcpy(msg.greeting, "Receiver 2 Terminated");
+	msg.mtype = 444; 	//mtype for sending ack message
+	msg.terminate = true;
+	msgsnd(qid, (struct msgbuf *)&msg, size, 0);
 	system("pkill sender257.out");
 
 	///

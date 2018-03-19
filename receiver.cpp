@@ -64,9 +64,12 @@ int main()
 			}
 		} else if (msg.needAck == false && sender251 == true)
 		{
-			if(msg.terminate == true) {
+			if(strcmp(msg.greeting, "Sender 251 terminated") == 0) 
+			{
 				sender251 = false;
-			} else {
+			}
+			else 
+			{
 				cout << "Sender 251: " << msg.greeting << endl;
 			}
 		}
