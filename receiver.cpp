@@ -87,10 +87,27 @@ int main()
 	}
 
 
+
+	///clear the message from the message queue
+	struct msqid_ds buf;
+		int checking = msgctl(qid, IPC_STAT, &buf);
+		cout << buf.msg_qnum << endl; //only send messages if the amount of messages in the queue is less than 250 
+		int count = 0;
+		while(buf.msg_qnum > count) 
+		{
+
+			cout<<"Message deleted: "<<count<<endl;
+			cout<<"MSQ QNUM: "<<buf.msg_qnum<<endl;
+			
+			msgrcv(qid,(struct msgbuf * )&msg,size,0,0);
+			count++;
+		}
 	///
 	/// delete all msg with mtype 111 in queue
 	///	
 	//display that receiver 1 has terminated
+	///now safe to delete the queue
+	msgctl(qid,IPC_RMID,NULL);
 	cout<<"Receiver 1 terminated"<<endl;
 	exit(0);
 }
