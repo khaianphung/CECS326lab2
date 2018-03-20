@@ -1,14 +1,13 @@
 /* 
-Tam Tran
-Khai Phung
-Vincent Vu
 Bunly Buth
+Khai Phung
+Tam Tran
+Vincent Vu
+
 
 filename: receiver1.cpp
-This is the first receiver. This receiver's role is to create the queue and receive messages from 
-both sender 257 and sender 997. While receiving messages from those senders, the receiver also 
-sends back an acknowledgement message to them beforce continuing. The program terminates when 
-both senders terminate.
+
+This is the first receiver. This receiver's role is to create the queue and receive messages from both sender 257 and sender 997. While receiving messages from those senders, the receiver also sends back an acknowledgement message to them before continuing. The program terminates when both senders terminate. Before terminating, this program removes any remaining messages in the queue and then deletes the queue.
 
 */
 
@@ -28,7 +27,7 @@ struct buf
 	long mtype; 		// required identifier
 	char greeting[50]; 	// mesg content
 	bool needAck;		// to know if receiver needs to send an ack msg to sender 997
-	bool terminate;		//used to check for termination
+	bool terminate;		// used to check for termination
 };
 
 int main() 
@@ -48,26 +47,39 @@ int main()
 	bool sender997 = true;
 	bool sender251 = true;
 
-	//mtype for receiver 1 is 111
+	// This while loop receives messages with mtype 111 which are sent from sender 997 and 251
 	while (play)
 	{		
+		//receiving msg
 		msgrcv(qid, (struct msgbuf *)&msg, size, 111, 0);
-		if(msg.needAck == true && sender997 == true) {
-			if(msg.terminate == false) {
+
+		//checking if this message was from sender 997
+		if(msg.needAck == true && sender997 == true) 
+		{
+			//if sender 997 haven't terminated, display message and send ack msg
+			if(msg.terminate == false) 
+			{
 				cout << "Sender 997: " << msg.greeting << endl;
 				strcpy(msg.greeting, "Ack from Receiver 1");
 				msg.mtype = 333; 	//mtype for sending ack message
 				msgsnd(qid, (struct msgbuf *)&msg, size, 0);
-			} else {
+			} 
+			//if sender 997 has terminated
+			else 
+			{
 				cout << msg.greeting << endl;
 				sender997 = false;
 			}
-		} else if (msg.needAck == false && sender251 == true)
+		} 
+		////checking if this message was from sender 251
+		else if (msg.needAck == false && sender251 == true)
 		{
+			//if sender 251 has terminated
 			if(strcmp(msg.greeting, "Sender 251 terminated") == 0) 
 			{
 				sender251 = false;
 			}
+			//if sender 251 hasn't terminated, display message as normal
 			else 
 			{
 				cout << "Sender 251: " << msg.greeting << endl;
@@ -86,28 +98,24 @@ int main()
 		cout << "boolSender251: " << sender251 << endl;  		
 	}
 
-
-
-	///clear the message from the message queue
+	///checking amount of messages in queue
 	struct msqid_ds buf;
-		int checking = msgctl(qid, IPC_STAT, &buf);
-		cout << buf.msg_qnum << endl; //only send messages if the amount of messages in the queue is less than 250 
-		int count = 0;
-		while(buf.msg_qnum > count) 
-		{
+	int checking = msgctl(qid, IPC_STAT, &buf);
+	int count = 0;
 
-			cout<<"Message deleted: "<<count<<endl;
-			cout<<"MSQ QNUM: "<<buf.msg_qnum<<endl;
-			
-			msgrcv(qid,(struct msgbuf * )&msg,size,0,0);
-			count++;
-		}
-	///
-	/// delete all msg with mtype 111 in queue
-	///	
-	//display that receiver 1 has terminated
-	///now safe to delete the queue
+	//removing messages in queue until empty
+	while(buf.msg_qnum > count) 
+	{
+		msgrcv(qid,(struct msgbuf * )&msg,size,0,0);
+		count++;
+	}
+	cout << "Message Queue is empty" << endl;
+		
+	///deleting the queue
 	msgctl(qid,IPC_RMID,NULL);
+	cout << "Message Queue deleted" << endl;
+
+	//terminating receiver 1
 	cout<<"Receiver 1 terminated"<<endl;
 	exit(0);
 }

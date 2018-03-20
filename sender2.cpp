@@ -1,13 +1,12 @@
 /* 
+Bunly Buth
 Khai Phung
-Vincent Vu
 Tam Tran
+Vincent Vu
 
 filename: sender2.cpp (sender 251)
-This sender is sender 251. Sender 251's job is to send a random 32 bit number to 
-receiver 1. It's continues to send until the user kills the program
-using a kill command. On kill command, the program sends one last message to notify 
-the receiver 1 that it has terminated.
+
+This sender is sender 251. Sender 251's job is to send a random 32 bit number to receiver 1. It's continues to send until the user kills the program using a kill command. On kill command, the program sends one last message to notify the receiver 1 that it has terminated.
 
 */
 
@@ -21,10 +20,10 @@ the receiver 1 that it has terminated.
 #include <cstdlib>
 #include <math.h>
 
-#include<signal.h>
+#include <signal.h>
 #include <sys/types.h>
 
-// include get_info.cpp
+// to to able to use get_info function
 #include "get_info.h"
 
 using namespace std;
@@ -35,14 +34,13 @@ struct buf
 	long mtype; 		// required identifier
 	char greeting[50]; 	// mesg content
 	bool needAck;		// to know if receiver needs to send an ack msg to sender 997
-	bool terminate;		//used to check for termination
+	bool terminate;		// used to check for termination
 };
 
 int main() 
 {
 
 	// find existing queue
-	//int qid = fork();
 	int qid = msgget(ftok(".",'u'), 0);
 
 	//initialize buf
@@ -57,21 +55,25 @@ int main()
 
 	get_info(qid,  (struct msgbuf *)&msg, size, 111);
 
-
+	// This loop ends only when this programm is terminated by a kill command
 	bool play = true;
 	while(play)
 	{
-		int r = rand() % ((int) pow(2,32) - 1);		// randomly creating 32 bit values numbers
-		string c = to_string(r);			// change char array to string
+		// randomly creating 32 bit values numbers
+		int r = rand() % ((int) pow(2,32) - 1);		
+
+		// change char array to string
+		string c = to_string(r);			
 		
 		//checking amount of messages in queue 
 		struct msqid_ds buf;
 		int checking = msgctl(qid, IPC_STAT, &buf);
-		cout << buf.msg_qnum << endl; //only send messages if the amount of messages in the queue is less than 250 
+
+		// to prevent programs from stopping because of message queue being full
+		// only send messages when queue has less than 250 messages
 		if(buf.msg_qnum < 250) 
 		{
-
-			//sending our a new 251 message
+			//sending 251 message
 			msg.mtype = 111; 				// changing mtype to send to receiver 1
 			msg.needAck = false;				// this sender does not need ack messages		
 			msg.terminate = false;				// not terminate yet
@@ -79,13 +81,13 @@ int main()
 			msgsnd(qid, (struct msgbuf *)&msg, size, 0); 	// sending back the same 251 message
 		}
 			
-		
-		cout << r << endl;		// display random number
+		// display random number
+		cout << r << endl;		
 	}
 	
+	//terminating sender 251
 	cout<<"Sender 251 terminated"<<endl;
 	exit(0);
-	
 }
 
 
